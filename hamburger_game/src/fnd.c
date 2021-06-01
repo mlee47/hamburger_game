@@ -36,27 +36,6 @@ void fnd_clear() {
 	}
 }
 
-void fnd_down() {	
-	int i=9,j,k=9;
-	for(j=0; j<100; j++){
-			*fnd[1] = fnd_hexadecimal[k];
-			*fnd[0] = fnd_hexadecimal[i];
-			usleep(50000);
-			i--;
-			if (i<0) {
-				i=9;
-				k--;
-			}
-			if (k < 0) {
-				*fnd[0] = fnd_hexadecimal[0];
-				*fnd[1] = fnd_hexadecimal[0];
-			}
-		
-	}
-
-}
-
-
 void fnd_all() {
 	int i;
 	for(i=0; i<MAX_FND; i++){
@@ -74,4 +53,34 @@ void fnd_hexa_number(unsigned long number) {
 		fnd_write( (short)(number & 0xF), i);
 		number = number >> 4;
 	}
+}
+
+void count_down() {
+	int i=9,j,k=2;
+	for(j=29; j>=0; j--){
+			*fnd[0] = fnd_hexadecimal[i];
+			*fnd[1] = fnd_hexadecimal[k];
+			usleep(1000000);
+			i--;
+			if (i<0) {
+				i=9;
+				k--;
+				*fnd[1] = fnd_hexadecimal[k];
+				if (k<0) {
+					*fnd[0] = fnd_hexadecimal[0];
+					*fnd[1] = fnd_hexadecimal[0];
+				}
+			}
+	}
+}
+
+int check_remain() {
+	if (*fnd[0] == fnd_hexadecimal[0] && *fnd[1] == fnd_hexadecimal[0]){
+		return 0;		
+	}
+	return 1;
+}
+
+void life_count(int n) {
+	*fnd[7] = fnd_hexadecimal[n];
 }

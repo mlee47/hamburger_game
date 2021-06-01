@@ -9,7 +9,7 @@
 #include <sys/mman.h>	// mmap(), munmap()
 #include <stdlib.h> 	// exit()
 #include <string.h>		// strlen()
-
+#include <pthread.h>
 
 #include "ieb.h"
 #include "led.h"
@@ -31,15 +31,12 @@ typedef enum {
 } error_t;
 
 typedef union {
-	unsigned char all;
+	unsigned char start;
 	struct {
-		unsigned char  led : 1;
-		unsigned char  dot : 1;
-		unsigned char  fnd : 1;
-		unsigned char clcd : 1;
 		unsigned char exit : 1;
+		unsigned char game : 1;
 	};
-} seclection_t;
+} selection_t;
 
 int main();
 short * mapper(off_t offset, int prot);
@@ -47,8 +44,10 @@ void unmapper();
 void emergency_closer();
 
 truth_t logic();
-void select_mode();
-void input_mode();
+void game_start_screen();
+void game_mode();
+void setup_game();
+truth_t start_game();
 
 
 #endif

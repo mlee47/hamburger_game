@@ -2,7 +2,7 @@
 #include "dot.h"
 
 
-static unsigned short dot_hexadecimal[10][MAX_DOT] = {
+static unsigned short dot_hexadecimal[16][MAX_DOT] = {
 	{0x3C, 0x7E, 0x7E, 0x7E, 0x3C}, // Br
 	{0x18, 0x24, 0x24, 0x24, 0x18}, // Let
 	{0x3C, 0x7E, 0x66, 0x7E, 0x3C}, // Tmt
@@ -16,12 +16,14 @@ static unsigned short dot_hexadecimal[10][MAX_DOT] = {
 };
 
 static short * dot[MAX_DOT];
+static short * dot_type;
 
-void init_dot(short * address[]) {
+void init_dot(short * address[], short* address_dot_type) {
 	int i;
 	for( i=0; i<MAX_DOT; i++ ) {
 		dot[i] = address[i];
 	}
+	dot_type = address_dot_type;
 }
 
 void dot_clear() {
@@ -29,38 +31,26 @@ void dot_clear() {
 	for(i=0; i<MAX_DOT; i++){
 		*dot[i] = 0;
 	}
-	usleep(0); // for Ximulator
+	usleep(0);
 }
 
 void dot_write(int number) {
 	int i;
+	*dot_type = (short)number;
 	for(i=0; i<MAX_DOT; i++){
 		*dot[i] = dot_hexadecimal[number][i];
 	}
 	usleep(0); // for Ximulator
 }
 
-void dot_stack(int n[], int call) {
+void dot_display(int arr[5]){
 	int i, j;
-	int shift;
-	
-	for (j=0; n[j]>= 0; j++){
-		for(shift = 0; shift <= call; shift++){
-			for(i=0; i<MAX_DOT; i++){
-				*dot[i] = dot_hexadecimal[n[j]+5][i] >> shift;
-			}
+	for(i=0; i<5;i++){
+		for(j =0; j<MAX_DOT; j++){
+			*dot_type = (short) arr[i];
+			*dot[j] = dot_hexadecimal[arr[i]][j];
 		}
+		usleep(500000);
 	}
-	
-}
-
-void dot_down_shift(int number, int call, int n[]) { 
-	int shift, i;
-	dot_write(number+5); 
-	for(shift = 0; shift <= call; shift++) {
-		for(i=0; i<MAX_DOT; i++){
- 			*dot[i] = dot_hexadecimal[number+5][i]>>shift ;
- 		}
-	usleep(50000);
-	}		 
+	dot_clear();
 }
