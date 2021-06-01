@@ -50,7 +50,7 @@ void dot_display(int arr[5]){
 			*dot_type = (short) arr[i];
 			*dot[j] = dot_hexadecimal[arr[i]][j];
 		}
-		usleep(500000);
+		usleep(1000000);
 	}
 	dot_clear();
 }

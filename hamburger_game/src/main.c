@@ -166,7 +166,7 @@ void game_mode(){
 		for(int i=0; i<5; i++){
 			usr_input[i] = -1;
 		}
-		call = 5;
+		call = 0;
 
 		setup_game();
 
@@ -208,11 +208,11 @@ truth_t start_game(){
 	int key_count, key_value;
 	key_count = keyboard_read(&key_value);
 	
-	if( key_count == 1 && call > 0 ) {
+	if( key_count == 1 && call < 5 && (key_value == 0 || key_value == 1 || key_value == 2 || key_value == 3 || key_value == 4 || key_value == 5)) {
 		if (key_value != 5) {
-			usr_input[5-call] = key_value;
+			usr_input[call] = key_value;
 			dot_write(key_value);
-			call-=1;
+			call+=1;
 			return TRUE;
 		
 		} else {
@@ -231,8 +231,17 @@ truth_t start_game(){
 			return FALSE;
 		}
 	}
+	else if(call >= 5) {
+		clcd_clear_display();
+		clcd_write_string("You're wrong");
+		life--;
+		usleep(1000000);
+		return FALSE;
+	}
 	else{
-		printf("Wrong Input");
+		clcd_clear_display();
+		clcd_write_string("Wrong input");
+		usleep(1000000);
 		return FALSE;
 	}
 }
